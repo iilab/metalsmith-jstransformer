@@ -26,6 +26,8 @@ module.exports = function (opts) {
   // Prepare the options.
   opts = opts || {}
   opts.layoutPattern = opts.layoutPattern || 'layouts/**'
+  opts.layoutPrefix = opts.layoutPrefix || ''
+  opts.layoutPostfix = opts.layoutPostfix || ''
   opts.pattern = opts.pattern || '**'
   opts.engineLocals = opts.engineLocals || {}
   opts.engineOptions = opts.engineOptions || {}
@@ -91,7 +93,9 @@ module.exports = function (opts) {
     function renderContent(file, done) {
       // Only render content, skip rendering layouts.
       if (!(file in layouts)) {
-        var layoutName = files[file].layout || defaultLayout
+        var layoutName = files[file].layout
+                       ? (opts.layoutPrefix + files[file].layout + opts.layoutPostfix)
+                       : (opts.layoutPrefix + defaultLayout + opts.layoutPostfix)
         while (layoutName && templates[layoutName]) {
           // Build the options/locals.
           var thefilename = path.join(metalsmith._directory, metalsmith._source, layoutName)
